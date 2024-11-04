@@ -16,17 +16,22 @@ mongoose
     console.log("THERE WAS AN ERROR ON MONGO", err);
   });
 
-app.get("/makecampground", async (req, res) => {
-  const camp = new Campground({
-    title: "My Backyard",
-    description: "cheap camping",
-  });
-  await camp.save();
-  res.send(camp);
-});
+// app.get("/makecampground", async (req, res) => {
+//   const camp = new Campground({
+//     title: "My Backyard",
+//     description: "cheap camping",
+//   });
+//   await camp.save();
+//   res.send(camp);
+// });
 
 app.get("/", (req, res) => {
   res.render("home");
+});
+
+app.get("/campgrounds", async (req, res) => {
+  const campgrounds = await Campground.find({});
+  res.render("campgrounds/index", { campgrounds });
 });
 
 app.listen(3000, () => {
