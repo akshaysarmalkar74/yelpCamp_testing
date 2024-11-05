@@ -3,13 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Campground</title>
+    <title>Edit Campground</title>
   </head>
   <body>
-    <form action="/campgrounds" method="POST">
+    <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
       <div>
         <label for="title">Title</label>
-        <input type="text" id="title" name="campground[title]" />
+        <input
+          type="text"
+          id="title"
+          name="campground[title]"
+          value="<%= campground.title %>"
+        />
       </div>
       <%/* If we do, name="campground[title]" then the parsing of the form data
       in Express will make the value available in the backend route under
@@ -26,10 +31,15 @@
       more */%>
       <div>
         <label for="location">Location</label>
-        <input type="text" id="location" name="campground[location]" />
+        <input
+          type="text"
+          id="location"
+          name="campground[location]"
+          value="<%= campground.location %>"
+        />
       </div>
-      <button>Add Campground</button>
+      <button>Update Campground</button>
     </form>
-    <a href="/campgrounds">All campgrounds</a>
+    <a href="/campgrounds/<%= campground._id %>">Back to campground</a>
   </body>
 </html>
