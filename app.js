@@ -2,10 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const app = express();
+const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const Campground = require("./models/campground");
-const campground = require("./models/campground");
 
+app.engine("ejs", ejsMate); //we have to tell express to use this particular one, so we set it, so that it doesn't use the default one
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(methodOverride("_method"));
@@ -38,12 +39,14 @@ app.get("/campgrounds", async (req, res) => {
   res.render("campgrounds/index", { campgrounds });
 });
 
+//for getting the id of the particular li and redirecting to that page
 app.post("/campgrounds", async (req, res) => {
   const campground = new Campground(req.body.campground);
   await campground.save();
   res.redirect(`/campgrounds/${campground._id}`);
 });
 
+//remember that we cannot put /new below /:id because if done so, /new will be considered as if given to /:id
 app.get("/campgrounds/new", (req, res) => {
   res.render("campgrounds/new");
 });
