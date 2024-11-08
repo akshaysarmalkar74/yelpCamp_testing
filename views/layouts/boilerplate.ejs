@@ -13,7 +13,8 @@
       crossorigin="anonymous"
     />
   </head>
-  <body>
+  <body class="d-flex flex-column vh-100">
+    <!--d-display, vh-view height -->
     <%- include('../partials/navbar') %>
     <!--the ejs-mate function to include navbar from partials by removing it from here-->
     <main class="container mt-5"><%- body %></main>
@@ -28,4 +29,5 @@
       crossorigin="anonymous"
     ></script>
   </body>
+  <%- include('../partials/footer') %>
 </html>
