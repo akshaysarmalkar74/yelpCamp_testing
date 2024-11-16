@@ -40,10 +40,15 @@ app.get("/campgrounds", async (req, res) => {
 });
 
 //for getting the id of the particular li and redirecting to that page
-app.post("/campgrounds", async (req, res) => {
-  const campground = new Campground(req.body.campground);
-  await campground.save();
-  res.redirect(`/campgrounds/${campground._id}`);
+//for creating new campground
+app.post("/campgrounds", async (req, res, next) => {
+  try {
+    const campground = new Campground(req.body.campground);
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`);
+  } catch (e) {
+    next(e);
+  }
 });
 
 //remember that we cannot put /new below /:id because if done so, /new will be considered as if given to /:id
@@ -77,6 +82,10 @@ app.delete(`/campgrounds/:id`, async (req, res) => {
   const { id } = req.params;
   await Campground.findByIdAndDelete(id);
   res.redirect("/campgrounds");
+});
+
+app.use((err, req, res, next) => {
+  res.send("SOMETHING WENT WRONG!");
 });
 
 app.listen(3000, () => {
