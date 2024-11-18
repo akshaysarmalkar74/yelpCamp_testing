@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const Joi = require("joi");
 const path = require("path");
 const app = express();
 const ejsMate = require("ejs-mate");
@@ -49,7 +50,26 @@ app.get(
 app.post(
   "/campgrounds",
   catchAsync(async (req, res, next) => {
-    if (!req.body.campground) throw new ExpressError("Invalid Campground", 400); //we do this so that if a person tries to create a campground using just html or postman...
+    //if (!req.body.campground) throw new ExpressError("Invalid Campground", 400); //we do this so that if a person tries to create a campground using just html or postman...
+    //For using Joi we define basic schema, note that this is not a mongoose schema..but something that is evaluated before that
+    //can be checked using POSTMAN and setting key to campground[price] and so on as defined below
+    const campgroundSchema = Joi.object({
+      //we are expecting it to be an object below and also to be required()
+      campground: Joi.object({
+        title: Joi.string().required(),
+        price: Joi.number().required().min(0), //no negative minimum is only 0
+        image: Joi.string().required(),
+        location: Joi.string().required(),
+        description: Joi.string().required(),
+      }).required(), //note that we are sending everything under the key of campground..example campground[price] and so on
+    });
+    const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+      const msg = error.details.map((el) => el.message).join(","); //.map creates a new array populated with the results of the function that is called inside with the elements of that array.
+      //basically without an arrow function: error.details.map(function(el){return el.message})//which gives an array of strings which is joined by , commas.
+      throw new ExpressError(msg, 400);
+    }
+    //console.log(result);
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
