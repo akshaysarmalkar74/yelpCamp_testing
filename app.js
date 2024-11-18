@@ -106,8 +106,11 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message = "Something Went Wrong" } = err;
-  res.status(statusCode).send(message);
+  //const { statusCode = 500, message = "Something Went Wrong" } = err; //we rempve the message from the destructuring
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = "Oh no something went wrong"; //if the error something not defined at all/built in
+  //res.status(statusCode).send(message);
+  res.status(statusCode).render("error", { err }); //so message is basically in the render part
 });
 
 app.listen(3000, () => {
