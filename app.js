@@ -4,6 +4,7 @@ const path = require("path");
 const app = express();
 const ejsMate = require("ejs-mate");
 const catchAsync = require("./utils/catchAsync");
+const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
 const Campground = require("./models/campground");
 
@@ -48,13 +49,10 @@ app.get(
 app.post(
   "/campgrounds",
   catchAsync(async (req, res, next) => {
-    try {
-      const campground = new Campground(req.body.campground);
-      await campground.save();
-      res.redirect(`/campgrounds/${campground._id}`);
-    } catch (e) {
-      next(e);
-    }
+    if (!req.body.campground) throw new ExpressError("Invalid Campground", 400); //we do this so that if a person tries to create a campground using just html or postman...
+    const campground = new Campground(req.body.campground);
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`);
   })
 );
 
@@ -103,8 +101,13 @@ app.delete(
   })
 );
 
+app.all("*", (req, res, next) => {
+  next(new ExpressError("Page Not Found", 404));
+});
+
 app.use((err, req, res, next) => {
-  res.send("SOMETHING WENT WRONG!");
+  const { statusCode = 500, message = "Something Went Wrong" } = err;
+  res.status(statusCode).send(message);
 });
 
 app.listen(3000, () => {
