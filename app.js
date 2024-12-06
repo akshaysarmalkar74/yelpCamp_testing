@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Joi = require("joi");
-const { campgroundSchema } = require("./schemas.js");
+const { campgroundSchema, reviewSchema } = require("./schemas.js");
 const path = require("path");
 const app = express();
 const ejsMate = require("ejs-mate");
@@ -41,6 +41,17 @@ const validateCampground = (req, res, next) => {
   if (error) {
     const msg = error.details.map((el) => el.message).join(","); //.map creates a new array populated with the results of the function that is called inside with the elements of that array.
     //basically without an arrow function: error.details.map(function(el){return el.message})//which gives an array of strings which is joined by , commas.
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+//after creating app.post for review we do below
+const validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
     throw new ExpressError(msg, 400);
   } else {
     next();
@@ -99,7 +110,9 @@ app.get("/campgrounds/new", (req, res) => {
 app.get(
   "/campgrounds/:id",
   catchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
+    const campground = await Campground.findById(req.params.id).populate(
+      "reviews"
+    );
     res.render("campgrounds/show", { campground });
   })
 );
@@ -139,6 +152,7 @@ app.delete(
 
 app.post(
   "/campgrounds/:id/reviews",
+  validateReview,
   catchAsync(async (req, res) => {
     //res.send("YES!");
     const campground = await Campground.findById(req.params.id);
