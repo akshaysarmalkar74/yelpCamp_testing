@@ -8,10 +8,9 @@ const ejsMate = require("ejs-mate");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
-const Campground = require("./models/campground");
-const Review = require("./models/review");
 
 const campgrounds = require("./routes/campgrounds");
+const reviews = require("./routes/reviews");
 
 app.engine("ejs", ejsMate); //we have to tell express to use this particular one, so we set it, so that it doesn't use the default one
 app.set("view engine", "ejs");
@@ -49,38 +48,13 @@ const validateReview = (req, res, next) => {
   }
 };
 
-//FOR ROUTER OF CAMPGROUNDS
+//FOR ROUTER OF CAMPGROUNDS and REVIEWS
 app.use("/campgrounds", campgrounds);
+app.use("/campgrounds/:id/reviews", reviews); //NOTE: we have /:id also in the route, hence we must use mergeParams in reviews.js
 
 app.get("/", (req, res) => {
   res.render("home");
 });
-
-app.post(
-  "/campgrounds/:id/reviews",
-  validateReview,
-  catchAsync(async (req, res) => {
-    //res.send("YES!");
-    const campground = await Campground.findById(req.params.id);
-    const review = new Review(req.body.review); //as we have 'named' it as review[body] in show page
-    //reviews is refering property reviews in schema of campground.js
-    campground.reviews.push(review);
-    await review.save();
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-  })
-);
-
-app.delete(
-  "/campgrounds/:id/reviews/:reviewId",
-  catchAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-    //pull from the reviews array from where we have reviewId
-    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/campgrounds/${id}`);
-  })
-);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
