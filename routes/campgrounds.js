@@ -69,6 +69,11 @@ router.get(
     const campground = await Campground.findById(req.params.id).populate(
       "reviews"
     );
+    //If the campground did not find that particular one with that ID flash the below error and redirect-can happen when you copy paste a deleted route of a campground
+    if (!campground) {
+      req.flash("error", "Campground does not exist");
+      res.redirect("/campgrounds");
+    }
     res.render("campgrounds/show", { campground });
   })
 );
@@ -77,6 +82,10 @@ router.get(
   "/:id/edit",
   catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
+    if (!campground) {
+      req.flash("error", "Campground does not exist, cannot edit!");
+      res.redirect("/campgrounds");
+    }
     res.render("campgrounds/edit", { campground });
   })
 );
@@ -93,6 +102,7 @@ router.put(
     //title:
     //location:
     //}
+    req.flash("success", "Successfully updated camground!");
     res.redirect(`/campgrounds/${campground._id}`);
   })
 );
@@ -102,6 +112,7 @@ router.delete(
   catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
+    req.flash("success", "Successfully deleted campground");
     res.redirect("/campgrounds");
   })
 );

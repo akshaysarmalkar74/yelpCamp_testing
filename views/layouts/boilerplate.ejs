@@ -17,7 +17,9 @@
     <!--d-display, vh-view height -->
     <%- include('../partials/navbar') %>
     <!--the ejs-mate function to include navbar from partials by removing it from here-->
-    <main class="container mt-5"><%= success %> <%- body %></main>
+    <main class="container mt-5">
+      <%- include('../partials/flash') %> <%- body %>
+    </main>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
       integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

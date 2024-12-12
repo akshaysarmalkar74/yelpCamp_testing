@@ -1,0 +1,23 @@
+<% if (success && success.length){ %><!--success array is always empty by default and it means it exist, so we check if a length exists as well-->
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <%= success %>
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+<% } %>
+<!--end/ just for the cause of formatting...annoying as hell no point in this comment btw-->
+<% if (error && error.length){ %>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <%= error %>
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+<% } %>
