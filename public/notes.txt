@@ -1,0 +1,2 @@
+We use public directory to serve static/non changeable that is not dynamic and remains the same always.
+So stuff like CSS, JS, images....are all static

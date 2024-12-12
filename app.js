@@ -3,22 +3,14 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 const { campgroundSchema, reviewSchema } = require("./schemas.js");
 const path = require("path");
-const app = express();
 const ejsMate = require("ejs-mate");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
+const session = require("express-session");
 
 const campgrounds = require("./routes/campgrounds");
 const reviews = require("./routes/reviews");
-
-app.engine("ejs", ejsMate); //we have to tell express to use this particular one, so we set it, so that it doesn't use the default one
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-
-app.use(methodOverride("_method"));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public"))); //added for serving static assets-from public folder
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/yelp-camp")
@@ -29,6 +21,30 @@ mongoose
     console.log("THERE WAS AN ERROR ON MONGO", err);
   });
 
+const app = express();
+
+app.engine("ejs", ejsMate); //we have to tell express to use this particular one, so we set it, so that it doesn't use the default one
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+app.use(methodOverride("_method"));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public"))); //added for serving static assets-from public folder
+
+const sessionConfig = {
+  secret: "thisshouldbeabettersecret!",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true, //for security
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //date.now is in milliseconds not in actual date, here it is set for a week
+    //1000 ms in a day, 60s in min, 60 min in an hr, 24 hrs in a day, 7 days in a week
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
+};
+
+app.use(session(sessionConfig));
+
 // app.get("/makecampground", async (req, res) => {
 //   const camp = new Campground({
 //     title: "My Backyard",
@@ -37,17 +53,6 @@ mongoose
 //   await camp.save();
 //   res.send(camp);
 // });
-
-//after creating app.post for review we do below
-const validateReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
 
 //FOR ROUTER OF CAMPGROUNDS and REVIEWS
 app.use("/campgrounds", campgrounds);
