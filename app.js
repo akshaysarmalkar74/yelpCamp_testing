@@ -18,6 +18,7 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public"))); //added for serving static assets-from public folder
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/yelp-camp")
