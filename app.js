@@ -9,6 +9,9 @@ const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const User = require("./models/user.js");
 
 const campgrounds = require("./routes/campgrounds");
 const reviews = require("./routes/reviews");
@@ -47,11 +50,24 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session()); //setting session..for to set it logged in always until logged out....
+passport.use(new localStrategy(User.authenticate())); //use the localStrategy and for that localStrategy the authentication method is going to be located on our User model called authenticate()...(made by passport)
+
+passport.serializeUser(User.serializeUser()); //telling passport on how to serialise a user...serialize-how do we store data in the session
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => {
   res.locals.success = req.flash("success"); //we will have access to this in out templates (show route in campground.js) automatically
   //on every single request, we take whatever is under flash('success') and have access to it under locals under the key success (locals.success)
   res.locals.error = req.flash("error");
   next();
+});
+
+app.get("/fakeUser", async (req, res) => {
+  const user = new User({ email: "anii@gmail.com", username: "anii" });
+  const newUser = await User.register(user, "cats"); //done through the help of passport, take entire 'user' model as instance and then a password, hash it and store
+  res.send(newUser);
 });
 
 // app.get("/makecampground", async (req, res) => {
