@@ -10,8 +10,15 @@ const methodOverride = require("method-override");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
-const localStrategy = require("passport-local");
+const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+
+/*
+• LocalStrategy — We use passport-local to create a new LocalStrategy. 
+This strategy uses the username and password fields from the login form to authenticate the user. 
+The User.authenticate() method, also provided by passport-local-mongoose, handles the verification of 
+the credentials. If the credentials are correct, Passport will proceed to serialize the user and establish a session.
+*/
 
 const campgrounds = require("./routes/campgrounds");
 const reviews = require("./routes/reviews");
@@ -52,10 +59,18 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session()); //setting session..for to set it logged in always until logged out....
-passport.use(new localStrategy(User.authenticate())); //use the localStrategy and for that localStrategy the authentication method is going to be located on our User model called authenticate()...(made by passport)
+passport.use(new LocalStrategy(User.authenticate())); //use the localStrategy and for that localStrategy the authentication method is going to be located on our User model called authenticate()...(made by passport)
 
 passport.serializeUser(User.serializeUser()); //telling passport on how to serialise a user...serialize-how do we store data in the session
 passport.deserializeUser(User.deserializeUser());
+/*
+•When a POST request with the user’s login information is made to the '/login' route, passport uses the local 
+authentication strategy to verify that the user’s credentials are valid.
+
+•It then serializes the provided User model into one value that is stored in the session object provided by express-session.
+
+•When future requests from the same user are made with the session cookie, 
+passport uses the serialized session value to deserialize or retrieve the User model. */
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success"); //we will have access to this in out templates (show route in campground.js) automatically
