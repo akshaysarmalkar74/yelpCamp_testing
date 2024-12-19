@@ -83,7 +83,7 @@ app.use((req, res, next) => {
 //for manually registering, (not the way it should be done, but just to check)
 app.get("/fakeUser", async (req, res) => {
   const user = new User({ email: "anii@gmail.com", username: "anii" });
-  const newUser = await User.register(user, "cats"); //done through the help of passport, take entire 'user' model as instance and then a password, hash it and store
+  const newUser = await User.register(user, "cats"); //done through the help of passport, take entire 'user' model as instance and then a password, hash it(salt it) and store
   res.send(newUser);
 });
 
