@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-
 const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 const Campground = require("../models/campground");
 const { campgroundSchema } = require("../schemas.js");
+const { isLoggedIn } = require("../middleware.js");
 
 const validateCampground = (req, res, next) => {
   const { error } = campgroundSchema.validate(req.body);
@@ -29,6 +29,7 @@ router.get(
 //for creating new campground
 router.post(
   "/",
+  isLoggedIn,
   validateCampground,
   catchAsync(async (req, res, next) => {
     //if (!req.body.campground) throw new ExpressError("Invalid Campground", 400); //we do this so that if a person tries to create a campground using just html or postman...
@@ -59,7 +60,14 @@ router.post(
 );
 
 //remember that we cannot put /new below /:id because if done so, /new will be considered as if given to /:id
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
+  /* below is moved to middleware.js as isLoggedIn */
+  // if (!req.isAuthenticated()) {
+  //   //basically we do the following if we still aren't authenticated but try to hit this route still
+  //   //isAuthenticated() is coming from passport
+  //   req.flash("error", "You must be signed in");
+  //   return res.redirect("/login");
+  // }
   res.render("campgrounds/new");
 });
 
@@ -80,6 +88,7 @@ router.get(
 
 router.get(
   "/:id/edit",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     if (!campground) {
@@ -92,6 +101,7 @@ router.get(
 
 router.put(
   "/:id",
+  isLoggedIn,
   validateCampground,
   catchAsync(async (req, res) => {
     const { id } = req.params;
@@ -109,6 +119,7 @@ router.put(
 
 router.delete(
   "/:id",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
