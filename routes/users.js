@@ -42,4 +42,15 @@ router.post(
   }
 );
 
+//through the help of passport
+router.get("/logout", (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    req.flash("success", "Successfully logged out");
+    res.redirect("/campgrounds");
+  });
+});
+
 module.exports = router;
