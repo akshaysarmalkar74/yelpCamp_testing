@@ -20,8 +20,9 @@ The User.authenticate() method, also provided by passport-local-mongoose, handle
 the credentials. If the credentials are correct, Passport will proceed to serialize the user and establish a session.
 */
 
-const campgrounds = require("./routes/campgrounds");
-const reviews = require("./routes/reviews");
+const userRoutes = require("./routes/users.js");
+const campgroundRoutes = require("./routes/campgrounds");
+const reviewRoutes = require("./routes/reviews");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/yelp-camp")
@@ -79,6 +80,7 @@ app.use((req, res, next) => {
   next();
 });
 
+//for manually registering, (not the way it should be done, but just to check)
 app.get("/fakeUser", async (req, res) => {
   const user = new User({ email: "anii@gmail.com", username: "anii" });
   const newUser = await User.register(user, "cats"); //done through the help of passport, take entire 'user' model as instance and then a password, hash it and store
@@ -94,9 +96,10 @@ app.get("/fakeUser", async (req, res) => {
 //   res.send(camp);
 // });
 
-//FOR ROUTER OF CAMPGROUNDS and REVIEWS
-app.use("/campgrounds", campgrounds);
-app.use("/campgrounds/:id/reviews", reviews); //NOTE: we have /:id also in the route, hence we must use mergeParams in reviews.js
+//FOR ROUTER OF CAMPGROUNDS and REVIEWS and USERS
+app.use("/", userRoutes);
+app.use("/campgrounds", campgroundRoutes);
+app.use("/campgrounds/:id/reviews", reviewRoutes); //NOTE: we have /:id also in the route, hence we must use mergeParams in reviews.js
 
 app.get("/", (req, res) => {
   res.render("home");
