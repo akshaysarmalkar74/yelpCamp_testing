@@ -73,10 +73,15 @@ authentication strategy to verify that the user’s credentials are valid.
 •When future requests from the same user are made with the session cookie, 
 passport uses the serialized session value to deserialize or retrieve the User model. */
 
+/*NOTE:
+So, whatever is attached to the res.locals object in Express gets passed to the rendered EJS view automatically.
+In this, we use it to pass the flash message to any rendered EJS view, so we can show it on the 
+page when it's loaded in the browser (i.e. when a flash message happens). */
 app.use((req, res, next) => {
   res.locals.success = req.flash("success"); //we will have access to this in out templates (show route in campground.js) automatically
   //on every single request, we take whatever is under flash('success') and have access to it under locals under the key success (locals.success)
   res.locals.error = req.flash("error");
+  res.locals.currentUser = req.user; //this is referring to the current user if logged in or registered in
   next();
 });
 

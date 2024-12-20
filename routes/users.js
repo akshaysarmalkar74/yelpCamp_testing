@@ -15,9 +15,13 @@ router.post(
       const { email, username, password } = req.body;
       const user = new User({ email, username });
       const registeredUser = await User.register(user, password); //this is from passport, hashes and salts it. and also User.save() is done automatically through it, no need to specify
-      //   console.log(registeredUser);
-      req.flash("success", "Welcome to yelpCamp");
-      res.redirect("/campgrounds");
+      //below is basically a passport quirk where it lets you see stuff that you couldn't see while you 'register'(we cannot see isLoggedIn stuff without actually logging in, not registering)
+      // because you were not 'logged in' so basically the passport makes it so that you can view it as if you are logged in even though you registered just now.
+      req.login(registeredUser, (err) => {
+        if (err) return next(err);
+        req.flash("success", "Welcome to yelpCamp");
+        res.redirect("/campgrounds");
+      });
     } catch (e) {
       req.flash("error", e.message);
       res.redirect("/register");
