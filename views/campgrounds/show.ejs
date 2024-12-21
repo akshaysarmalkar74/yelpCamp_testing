@@ -17,6 +17,9 @@
         <li class="list-group-item">$<%= campground.price %>/night</li>
       </ul>
 
+      <!--if statement is to make sure that only the creator of the campground can access edit or delete, the first currentUser before && checks if a currentUser exits, without the code will break-->
+      <!--currentUser comes from middleware app.use in app.js at the moment-->
+      <% if(currentUser && campground.author.equals(currentUser)) {%>
       <div class="card-body">
         <a
           class="card-link btn btn-info"
@@ -31,6 +34,8 @@
           <button class="btn btn-danger">DELETE</button>
         </form>
       </div>
+      <% } %>
+
       <div class="card-footer text-muted">2 days ago</div>
     </div>
   </div>

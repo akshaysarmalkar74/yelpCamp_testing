@@ -78,7 +78,7 @@ So, whatever is attached to the res.locals object in Express gets passed to the 
 In this, we use it to pass the flash message to any rendered EJS view, so we can show it on the 
 page when it's loaded in the browser (i.e. when a flash message happens). */
 app.use((req, res, next) => {
-  console.log(req.session);
+  // console.log(req.session);
   res.locals.success = req.flash("success"); //we will have access to this in out templates (show route in campground.js) automatically
   //on every single request, we take whatever is under flash('success') and have access to it under locals under the key success (locals.success)
   res.locals.error = req.flash("error");
