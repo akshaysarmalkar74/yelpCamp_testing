@@ -53,6 +53,7 @@ router.post(
     // }
     //console.log(result);
     const campground = new Campground(req.body.campground);
+    campground.author = req.user._id; //comes from auth
     await campground.save();
     req.flash("success", "Successfully made a campground!");
     res.redirect(`/campgrounds/${campground._id}`);
@@ -74,10 +75,12 @@ router.get("/new", isLoggedIn, (req, res) => {
 router.get(
   "/:id",
   catchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id).populate(
-      "reviews"
-    );
-    //If the campground did not find that particular one with that ID flash the below error and redirect-can happen when you copy paste a deleted route of a campground
+    const campground = await Campground.findById(req.params.id)
+      .populate("reviews")
+      .populate("author"); //makse sure author is also viewable not just id(as seen in relationships/ one to many and stuff), but still have to 'show' it in show.ejs
+    //If the campground did not find that particular one with that ID flash the below error and redirect-can happen when yo
+    // u copy paste a deleted route of a campground
+
     if (!campground) {
       req.flash("error", "Campground does not exist");
       res.redirect("/campgrounds");

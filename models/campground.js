@@ -8,6 +8,11 @@ const CampgroundSchema = new mongoose.Schema({
   price: Number,
   description: String,
   location: String,
+  //below is added only after reviews (below) accordingly to lecture
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   // below is added later after creating review.js model, one campoground has many reviews
   reviews: [
     {
