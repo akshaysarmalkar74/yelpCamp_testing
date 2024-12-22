@@ -1,3 +1,7 @@
+const { campgroundSchema, reviewSchema } = require("./schemas.js");
+const ExpressError = require("./utils/ExpressError");
+const Campground = require("./models/campground");
+
 module.exports.isLoggedIn = (req, res, next) => {
   //console.log("REQ.USER", req.user); //req.user is coming from the session, which is deserialised to give back who the user is that is stored
   //above gives back id, username and email
@@ -17,4 +21,36 @@ module.exports.storeReturnTo = (req, res, next) => {
     res.locals.returnTo = req.session.returnTo;
   }
   next();
+};
+
+module.exports.validateCampground = (req, res, next) => {
+  const { error } = campgroundSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(","); //.map creates a new array populated with the results of the function that is called inside with the elements of that array.
+    //basically without an arrow function: error.details.map(function(el){return el.message})//which gives an array of strings which is joined by , commas.
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+module.exports.isAuthor = async (req, res, next) => {
+  const { id } = req.params;
+  const campground = await Campground.findById(id);
+  if (!campground.author.equals(req.user._id)) {
+    req.flash("error", "You do not have permission to do that");
+    return res.redirect(`/campgrounds/${id}`);
+  }
+  next();
+};
+
+//after creating app.post(router.post) for review, we do below
+module.exports.validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
 };
