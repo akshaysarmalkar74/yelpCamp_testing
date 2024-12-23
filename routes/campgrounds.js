@@ -67,11 +67,13 @@ router.get(
   "/:id",
   catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
-      .populate("reviews")
+      .populate({
+        path: "reviews", //shows all reviews, must also be done on show.ejs
+        populate: { path: "author" }, //shows the name of the author that has reviewed.
+      })
       .populate("author"); //make sure author is also viewable not just id(as seen in relationships/ one to many and stuff), but still have to 'show' it in show.ejs
     //If the campground did not find that particular one with that ID flash the below error and redirect-can happen when yo
     // u copy paste a deleted route of a campground
-
     if (!campground) {
       req.flash("error", "Campground does not exist");
       res.redirect("/campgrounds");

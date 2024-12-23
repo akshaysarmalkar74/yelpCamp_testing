@@ -1,6 +1,7 @@
 const { campgroundSchema, reviewSchema } = require("./schemas.js");
 const ExpressError = require("./utils/ExpressError");
 const Campground = require("./models/campground");
+const Review = require("./models/review.js");
 
 module.exports.isLoggedIn = (req, res, next) => {
   //console.log("REQ.USER", req.user); //req.user is coming from the session, which is deserialised to give back who the user is that is stored
@@ -34,10 +35,22 @@ module.exports.validateCampground = (req, res, next) => {
   }
 };
 
+//cannot delete a campground if you are not the author of that campground.
 module.exports.isAuthor = async (req, res, next) => {
   const { id } = req.params;
   const campground = await Campground.findById(id);
   if (!campground.author.equals(req.user._id)) {
+    req.flash("error", "You do not have permission to do that");
+    return res.redirect(`/campgrounds/${id}`);
+  }
+  next();
+};
+
+//below middleware makes sure that the review delete cannot be done if you are not the user, in the case that we are not hiding the the delete button for the review on the show page if I am not the author
+module.exports.isReviewAuthor = async (req, res, next) => {
+  const { id, reviewId } = req.params;
+  const review = await Review.findById(reviewId);
+  if (!review.author.equals(req.user._id)) {
     req.flash("error", "You do not have permission to do that");
     return res.redirect(`/campgrounds/${id}`);
   }
