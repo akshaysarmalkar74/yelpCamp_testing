@@ -6,24 +6,26 @@ const passport = require("passport");
 const users = require("../controllers/users");
 const { storeReturnTo } = require("../middleware"); //from middleware.js
 
-router.get("/register", users.renderRegister);
+router
+  .route("/register")
+  .get(users.renderRegister)
+  .post(catchAsync(users.register));
 
-router.post("/register", catchAsync(users.register));
+router
+  .route("/login")
+  .get(users.renderLogin)
+  //we use passport to easily do this below
+  .post(
+    // use the storeReturnTo middleware to save the returnTo value from session to res.locals
+    storeReturnTo,
+    // passport.authenticate logs the user in and clears req.session
+    passport.authenticate("local", {
+      failureFlash: true,
+      failureRedirect: "/login",
+    }),
+    users.login
+  );
 
-router.get("/login", users.renderLogin);
-
-//we use passport to easily do this
-router.post(
-  "/login",
-  // use the storeReturnTo middleware to save the returnTo value from session to res.locals
-  storeReturnTo,
-  // passport.authenticate logs the user in and clears req.session
-  passport.authenticate("local", {
-    failureFlash: true,
-    failureRedirect: "/login",
-  }),
-  users.login
-);
 /*NOTE FOR ABOVE:
 By using the storeReturnTo middleware function, we can save the returnTo value to res.locals before passport.authenticate() clears the 
 session and deletes req.session.returnTo. This enables us to access and use the returnTo value (via res.locals.returnTo) 
