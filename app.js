@@ -1,3 +1,11 @@
+if (process.env.NODE_ENV !== "production") {
+  /*process.env.node environment is an environment variable that is usually just 'developemnt' or 'production'.
+  We have been running in development this whole time, when we deploy we will be running our code in production.
+  So according to the if statement, only if we are in development mode, require the below package and take stuff from .env file and add them to process.env and acces them in this file */
+  require("dotenv").config();
+}
+console.log(process.env.API_KEY);
+
 const express = require("express");
 const mongoose = require("mongoose");
 const Joi = require("joi");
