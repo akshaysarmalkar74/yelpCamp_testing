@@ -9,8 +9,10 @@ const {
   isAuthor,
 } = require("../middleware.js");
 const multer = require("multer"); //we install and use multer middleware for pasing the uploaded files, uploading is done through enctype="multipart/form-data" as seen in new.ejs.
-//after uplaoding we get a an empty object, therefore we use this middleware to parse it.
-const upload = multer({ dest: "uploads/" }); //destination for uploads
+// //after uplaoding we get a an empty object, therefore we use this middleware to parse it.
+// const upload = multer({ dest: "uploads/" }); //destination for uploads
+const { storage } = require("../cloudinary"); //node automatically looks for a .js file
+const upload = multer({ storage }); //instead of storing in uploads/ folder like in above commented case we do it in cloudinary now
 
 router
   .route("/")
