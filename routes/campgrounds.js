@@ -8,14 +8,27 @@ const {
   validateCampground,
   isAuthor,
 } = require("../middleware.js");
+const multer = require("multer"); //we install and use multer middleware for pasing the uploaded files, uploading is done through enctype="multipart/form-data" as seen in new.ejs.
+//after uplaoding we get a an empty object, therefore we use this middleware to parse it.
+const upload = multer({ dest: "uploads/" }); //destination for uploads
 
 router
   .route("/")
   .get(catchAsync(campgrounds.index))
+  // .post(
+  //   isLoggedIn,
+  //   validateCampground,
+  //   catchAsync(campgrounds.createCampground)
+  // );
   .post(
-    isLoggedIn,
-    validateCampground,
-    catchAsync(campgrounds.createCampground)
+    upload.array(
+      "image"
+    ) /*upload.single for one image, upload.array for multiple */,
+    /*piece of form data named image is looked for uploading...this line of code is used through mutler middleware */
+    (req, res) => {
+      console.log(req.body, req.files);
+      res.send("it worked!");
+    }
   );
 
 //remember that we cannot put /new below /:id because if done so, /new will be considered as if given to /:id

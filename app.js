@@ -40,7 +40,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(methodOverride("_method"));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); //for parsing req.body which is by default undefined, it is populated when we use this line of code and req.body can be accessed, they are all in key-value pairs.
 app.use(express.static(path.join(__dirname, "public"))); //added for serving static assets-from public folder
 
 const sessionConfig = {

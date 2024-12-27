@@ -3,7 +3,15 @@
 <div class="row">
   <h1 class="text-center">New Campground</h1>
   <div class="col-6 offset-3">
-    <form action="/campgrounds" method="POST" novalidate class="validated-form">
+    <form
+      action="/campgrounds"
+      method="POST"
+      novalidate
+      class="validated-form"
+      enctype="multipart/form-data"
+    >
+      <!-- we set enctype above to be able to upload files, which we have seen the same type in urlencoded=true thing in app.use  -->
+
       <!--novalidate is used for bootstrap to take reigns over from normal stuff, it actually sets everything to not validate even if it is set to 'required'-->
       <div class="mb-3">
         <label class="form-label" for="title">Title</label>
@@ -41,7 +49,10 @@
         <div class="valid-feedback">Looks good!</div>
       </div>
 
-      <div class="mb-3">
+      <input type="file" name="image" id="" multiple />
+      <!--attribute multiple lets multiple files be uploaded-->
+
+      <!-- <div class="mb-3">
         <label class="form-label" for="image">Image Url</label>
         <input
           class="form-control"
@@ -51,7 +62,7 @@
           required
         />
         <div class="valid-feedback">Looks good!</div>
-      </div>
+      </div> -->
 
       <div class="mb-3">
         <label class="form-label" for="price">Campground Price</label>
