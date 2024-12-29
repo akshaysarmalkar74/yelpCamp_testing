@@ -3,11 +3,40 @@
 
 <div class="row">
   <div class="col-6">
-    <div class="card mb-3">
-      <% for(let img of campground.images){ %>
-      <img src="<%=img.url%>" class="card-img-top" alt="" />
-
+    <!--bootstrap for carousel-->
+    <div id="campgroundCarousel" class="carousel slide">
+      <div class="carousel-inner">
+        <% campground.images.forEach((img,i)=>{ %>
+        <!--for the index i for each image, in the below line only if i===0 then make it active else nothing.-->
+        <div class="carousel-item <%= i===0? 'active':'' %>">
+          <img src="<%=img.url%>" class="d-block w-100" alt="..." />
+        </div>
+        <% }) %>
+      </div>
+      <!--only if there's one image in a campground do the below condition-->
+      <% if(campground.images.length >1){ %>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#campgroundCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#campgroundCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
       <% } %>
+    </div>
+
+    <div class="card mb-3">
       <div class="card-body">
         <h5 class="card-title"><%= campground.title %></h5>
         <p class="card-text"><%= campground.description %></p>
