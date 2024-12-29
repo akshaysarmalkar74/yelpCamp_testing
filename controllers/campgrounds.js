@@ -38,8 +38,13 @@ module.exports.createCampground = async (req, res, next) => {
   // }
   //console.log(result);
   const campground = new Campground(req.body.campground);
+  campground.images = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  })); //we are getting req.files from multer middleware, and through that we map/get an array of stuff that it has and we take path and filename out of it
   campground.author = req.user._id; //comes from auth
   await campground.save();
+  console.log(campground);
   req.flash("success", "Successfully made a campground!");
   res.redirect(`/campgrounds/${campground._id}`);
 };

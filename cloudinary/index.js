@@ -12,8 +12,10 @@ cloudinary.config({
 //bascially the cloudinary storage below is now configured/setup it has the credentials four our particular cloudinary account, upload stuff to folder YelpCamp.
 const storage = new CloudinaryStorage({
   cloudinary,
-  folder: "YelpCamp",
-  allowedFormats: ["jpeg", "png", "jfif", "jpg"],
+  params: {
+    folder: "YelpCamp",
+    allowed_formats: ["jpeg", "png", "jfif", "jpg"],
+  },
 });
 
 module.exports = {

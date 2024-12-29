@@ -4,7 +4,6 @@ if (process.env.NODE_ENV !== "production") {
   So according to the if statement, only if we are in development mode, require the below package and take stuff from .env file and add them to process.env and acces them in this file */
   require("dotenv").config();
 }
-console.log(process.env.API_KEY);
 
 const express = require("express");
 const mongoose = require("mongoose");
