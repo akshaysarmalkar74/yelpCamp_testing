@@ -26,7 +26,16 @@ const seedDB = async () => {
       author: "6766bcf3abd2fb171b0c997a", //all campgrounds have only one ID, that is one creator.
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
-      image: await seedImg(),
+      images: [
+        {
+          url: "https://res.cloudinary.com/deedvudwx/image/upload/v1735910840/YelpCamp/f1pze3b8ijbdobsamkoz.jpg",
+          filename: "YelpCamp/f1pze3b8ijbdobsamkoz",
+        },
+        {
+          url: "https://res.cloudinary.com/deedvudwx/image/upload/v1735910842/YelpCamp/lw20ltwnn0bypjz7zlwg.jpg",
+          filename: "YelpCamp/lw20ltwnn0bypjz7zlwg",
+        },
+      ],
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem totam, hic, repellat ipsum tempore consectetur eos officiis necessitatibus impedit error dicta sapiente quod nesciunt, vitae odit quas. Aliquid, illo autem?",
       price, //short hand instead of price:price
