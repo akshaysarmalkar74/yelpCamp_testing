@@ -75,8 +75,30 @@
           id="image"
           name="image"
           multiple
-          required
         />
+      </div>
+      <!-- NOTE: for deleteImages Below
+      To make the app as secure as possible, we may need to add validations to all information submitted to 
+      the server, including the images. However, the process to validate images with Joi when using multer is not 
+      as straightforward as with the other properties, because the images are not found in req.body 
+      (the one we're validating with Joi), they're part of the req.files object instead, and Colt ended 
+      up not covering it in this course.  As we're validating the req.body.campground object, we need to cover 
+      all of its properties, including deleteImages.
+
+-->
+      <div class="mb-3">
+        <% campground.images.forEach(function(img,i){%>
+        <img src="<%= img.url %>" class="img-thumbnail" alt="" />
+        <div class="form-check-inline">
+          <input
+            type="checkbox"
+            id="img-<%= i %>"
+            name="deleteImages[]"
+            value="<%= img.filename %>"
+          />
+        </div>
+        <label for="img-<%= i %>">Delete?</label>
+        <%}) %>
       </div>
 
       <div class="mb-3">

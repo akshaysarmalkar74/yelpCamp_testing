@@ -10,6 +10,7 @@ module.exports.campgroundSchema = Joi.object({
     location: Joi.string().required(),
     description: Joi.string().required(),
   }).required(), //note that we are sending everything under the key of campground..example campground[price] and so on
+  deleteImages: Joi.array(),
 });
 
 module.exports.reviewSchema = Joi.object({
