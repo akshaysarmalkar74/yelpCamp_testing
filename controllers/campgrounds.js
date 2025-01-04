@@ -1,4 +1,5 @@
 const Campground = require("../models/campground");
+const { cloudinary } = require("../cloudinary");
 
 module.exports.index = async (req, res) => {
   const campgrounds = await Campground.find({});
@@ -91,6 +92,16 @@ module.exports.updateCampground = async (req, res) => {
   }));
   campground.images.push(...imgs); //we do not directly push it in the above code because we cannot push an array to another array, rather we take something from the above array and push it in this line.
   await campground.save();
+  //if there are any images to delete, do below condition...first we delete from cloudinary and then 'update'...which we can see on show page where those images are deleted.
+  if (req.body.deleteImages) {
+    for (let filename of req.body.deleteImages) {
+      await cloudinary.uploader.destroy(filename); //there's a method called destroy on uploader, pass the filename and it should delete that particular file
+    }
+    await campground.updateOne({
+      $pull: { images: { filename: { $in: req.body.deleteImages } } },
+    }); //pulling elements out of an array, out of images array, filename of each image is in the req.body.deleteImages
+    console.log(campground);
+  }
   req.flash("success", "Successfully updated camground!");
   res.redirect(`/campgrounds/${campground._id}`);
 };
