@@ -2,6 +2,16 @@ const mongoose = require("mongoose");
 const Review = require("./review");
 const Schema = mongoose.Schema;
 
+const ImageSchema = new Schema({
+  url: String,
+  filename: String,
+});
+
+ImageSchema.virtual("thumbnail").get(function () {
+  return this.url.replace("/upload", "/upload/w_200");
+}); //the reason we use a virtual, we don't need to store this on our model or in the database. It is dervied from the information we're already storing.
+//basically this is what happens to the URL: https://res.cloudinary.com/deedvudwx/image/upload/w_200/v1736004228/YelpCamp/ruuxad2hhmyomva2qndw.jpg
+
 const CampgroundSchema = new mongoose.Schema({
   title: String,
   images: [
@@ -10,6 +20,7 @@ const CampgroundSchema = new mongoose.Schema({
       filename: String,
     },
   ],
+  images: [ImageSchema],
   price: Number,
   description: String,
   location: String,

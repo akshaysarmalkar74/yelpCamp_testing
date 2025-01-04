@@ -28,14 +28,15 @@ const seedDB = async () => {
       title: `${sample(descriptors)} ${sample(places)}`,
       images: [
         {
-          url: "https://res.cloudinary.com/deedvudwx/image/upload/v1735910840/YelpCamp/f1pze3b8ijbdobsamkoz.jpg",
-          filename: "YelpCamp/f1pze3b8ijbdobsamkoz",
+          url: "https://res.cloudinary.com/deedvudwx/image/upload/v1736004228/YelpCamp/bfefzfvcrnzfjepkkt9s.jpg",
+          filename: "YelpCamp/bfefzfvcrnzfjepkkt9s",
         },
         {
-          url: "https://res.cloudinary.com/deedvudwx/image/upload/v1735910842/YelpCamp/lw20ltwnn0bypjz7zlwg.jpg",
-          filename: "YelpCamp/lw20ltwnn0bypjz7zlwg",
+          url: "https://res.cloudinary.com/deedvudwx/image/upload/v1736004228/YelpCamp/ruuxad2hhmyomva2qndw.jpg",
+          filename: "YelpCamp/ruuxad2hhmyomva2qndw",
         },
       ],
+
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem totam, hic, repellat ipsum tempore consectetur eos officiis necessitatibus impedit error dicta sapiente quod nesciunt, vitae odit quas. Aliquid, illo autem?",
       price, //short hand instead of price:price
