@@ -23,7 +23,7 @@ const seedDB = async () => {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 20) + 10;
     const camp = new Campground({
-      author: "6766bcf3abd2fb171b0c997a", //all campgrounds have only one ID, that is one creator.
+      author: "6766bcf3abd2fb171b0c997a", //all campgrounds have only one ID, that is one creator which is hardoded here. Which is basically myself, ani.
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       images: [
@@ -40,6 +40,10 @@ const seedDB = async () => {
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem totam, hic, repellat ipsum tempore consectetur eos officiis necessitatibus impedit error dicta sapiente quod nesciunt, vitae odit quas. Aliquid, illo autem?",
       price, //short hand instead of price:price
+      geometry: {
+        type: "Point",
+        coordinates: [-83.06092025712132, 35.51911200310796],
+      }, //we are hardcoding the geometry here because it shows error otherwise, if the location entered is something that does not exist...or any as such..then this is the default
     });
     await camp.save();
   }

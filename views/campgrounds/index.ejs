@@ -8,7 +8,16 @@
     <div class="col-md-4">
       <!--The md in col-md-4 represents the medium-sized screens, indicating that the column 
       should take up 4 out of the 12 available columns on medium-sized screens-->
+      <% if(campground.images.length){ %>
       <img class="img-fluid" src="<%=campground.images[0].url%>" />
+      <% } else{%>
+      <img
+        class="img-fluid"
+        src="https://res.cloudinary.com/deedvudwx/image/upload/v1736004228/YelpCamp/bfefzfvcrnzfjepkkt9s.jpg"
+        alt=""
+      />
+      <% } %>
+      <!-- For the above the images are displayed if there is anything(length) in the images array, else put a default (NOTe: THIS ONLY PUTS A DEFAULT FOR THE INDEX PAGE) -->
     </div>
     <div class="col-md-8">
       <div class="card-body">
