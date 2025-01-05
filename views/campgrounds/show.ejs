@@ -5,7 +5,8 @@
   const maptilerApiKey = "<%- process.env.MAPTILER_API_KEY %>";
   const campground = <%- JSON.stringify(campground) %>
 </script>
-
+<!-- The json.stringify above encloses campground above because the resulting without former will give non valid javascript. Hence, converted to JSON now gives key value pairs as in the form of JS. -->
+<!-- We use the above campground variable to access on the showPageMap.js which is the client side for whatever the location is requested -->
 <div class="row">
   <div class="col-6">
     <div id="map" style="width: 400px; height: 300px"></div>
