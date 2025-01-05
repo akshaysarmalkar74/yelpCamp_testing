@@ -14,16 +14,23 @@ ImageSchema.virtual("thumbnail").get(function () {
 
 const CampgroundSchema = new mongoose.Schema({
   title: String,
-  images: [
-    {
-      url: String,
-      filename: String,
-    },
-  ],
+  //other images is removed due to the below line
   images: [ImageSchema],
   price: Number,
   description: String,
   location: String,
+  //below is added as we are geocoding now
+  geometry: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  },
   //below is added only after reviews (below) accordingly to lecture
   author: {
     type: Schema.Types.ObjectId,

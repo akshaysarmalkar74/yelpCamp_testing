@@ -1,5 +1,7 @@
 const Campground = require("../models/campground");
 const { cloudinary } = require("../cloudinary");
+const maptilerClient = require("@maptiler/client");
+maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
 module.exports.index = async (req, res) => {
   const campgrounds = await Campground.find({});
@@ -38,7 +40,12 @@ module.exports.createCampground = async (req, res, next) => {
   //   throw new ExpressError(msg, 400);
   // }
   //console.log(result);
+  const geoData = await maptilerClient.geocoding.forward(
+    req.body.campground.location,
+    { limit: 1 }
+  );
   const campground = new Campground(req.body.campground);
+  campground.geometry = geoData.features[0].geometry; //we get back a geoJson format when this is res.send(geoData.features[0].geometry), and we have type set to Point always
   campground.images = req.files.map((f) => ({
     url: f.path,
     filename: f.filename,
