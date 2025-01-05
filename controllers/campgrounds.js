@@ -93,6 +93,12 @@ module.exports.updateCampground = async (req, res) => {
   //title:
   //location:
   //}
+  //
+  const geoData = await maptilerClient.geocoding.forward(
+    req.body.campground.location,
+    { limit: 1 }
+  );
+  campground.geometry = geoData.features[0].geometry;
   const imgs = req.files.map((f) => ({
     url: f.path,
     filename: f.filename,

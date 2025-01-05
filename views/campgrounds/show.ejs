@@ -1,8 +1,14 @@
 <% layout('layouts/boilerplate') %>
 <link rel="stylesheet" href="/stylesheets/stars.css" />
 
+<script>
+  const maptilerApiKey = "<%- process.env.MAPTILER_API_KEY %>";
+  const campground = <%- JSON.stringify(campground) %>
+</script>
+
 <div class="row">
   <div class="col-6">
+    <div id="map" style="width: 400px; height: 300px"></div>
     <!--bootstrap for carousel-->
     <div id="campgroundCarousel" class="carousel slide">
       <div class="carousel-inner">
@@ -179,3 +185,6 @@
     <% } %>
   </div>
 </div>
+
+<!--the below code does not run without the access code mentioned in this ejs file as well, done in the topmose part of the page-->
+<script src="/javascripts/showPageMap.js"></script>
