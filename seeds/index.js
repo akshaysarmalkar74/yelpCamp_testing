@@ -42,7 +42,10 @@ const seedDB = async () => {
       price, //short hand instead of price:price
       geometry: {
         type: "Point",
-        coordinates: [-83.06092025712132, 35.51911200310796],
+        coordinates: [
+          cities[random1000].longitude, //longitude first and latitude next for geoJson...its just the way it works
+          cities[random1000].latitude,
+        ],
       }, //we are hardcoding the geometry here because it shows error otherwise, if the location entered is something that does not exist...or any as such..then this is the default
     });
     await camp.save();
