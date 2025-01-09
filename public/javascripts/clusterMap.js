@@ -7,6 +7,7 @@ const map = new maptilersdk.Map({
   zoom: 3,
 });
 
+//below are all basically event listeners
 map.on("load", function () {
   map.addSource("campgrounds", {
     type: "geojson",
@@ -43,7 +44,7 @@ map.on("load", function () {
     source: "campgrounds",
     filter: ["has", "point_count"],
     layout: {
-      "text-field": "{point_count_abbreviated}",
+      "text-field": "{point_count_abbreviated}", //number of elements that are clustered together basically a number
       "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
       "text-size": 12,
     },
@@ -82,6 +83,7 @@ map.on("load", function () {
   // the location of the feature, with
   // description HTML from its properties.
   map.on("click", "unclustered-point", function (e) {
+    // console.log(e.features[0]);
     const { popUpMarkup } = e.features[0].properties;
     const coordinates = e.features[0].geometry.coordinates.slice();
 
@@ -94,7 +96,7 @@ map.on("load", function () {
 
     new maptilersdk.Popup()
       .setLngLat(coordinates)
-      .setHTML(popUpMarkup)
+      .setHTML(popUpMarkup) //now it pops up when clicked on an unclustered point
       .addTo(map);
   });
 

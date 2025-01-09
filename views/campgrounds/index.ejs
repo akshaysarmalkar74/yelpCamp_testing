@@ -23,6 +23,7 @@
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title"><%= campground.title %></h5>
+        <!-- <h5 class="card-title"><%= campground.properties.popUpMarkup %></h5>  THIS LINE WAS DONE TO CHECK IF THE POPUP WAS WORKING AND IF IT WAS STORED IN THE RESULTING OBJECT< WHEN CONSOLE LOGGED IN THE CONSOLE OF BROWSER-->
         <p class="card-text"><%= campground.description %></p>
         <p class="card-text">
           <small class="text-muted"><%= campground.location %></small>
@@ -40,5 +41,6 @@
   const maptilerApiKey = "<%- process.env.MAPTILER_API_KEY %>";
   const campgrounds = { features: <%- JSON.stringify(campgrounds) %>}
 </script>
-
+<!--note that features is set to that because that is what we want in clusterMap.js-->
+<!-- above in stringify for all 'campgrounds' not just 'campground' like in show page...which makes sense.-->
 <script src="/javascripts/clusterMap.js"></script>
