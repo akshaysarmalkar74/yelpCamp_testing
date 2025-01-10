@@ -4,8 +4,13 @@
   <div class="col-6 offset-3">
     <div class="alert alert-danger" role="alert">
       <h4 class="alert-heading"><%= err.message %></h4>
-     <p><%= err.stack %></p><!--not recommended to put this in actual website but for our own purpose-->
-      </p>
+      <% if (process.env.NODE_ENV !== "production") { %>
+      <p><%= err.stack %></p>
+      <!--not recommended to put this in actual website but for our own purpose-->
+      <% } %>
+      <!--The above is put in a condition because we dont want to display the error stack outside of development.
+      The condtion states that if it is 'not' in production then only show the error stack(error stack is the whole error which displays where it is going wrong in the red box for debugging)-->
+      <!-- NOTE: For running in production mode we use the following command in gitbash NODE_ENV=production node app.js -->
     </div>
   </div>
 </div>
