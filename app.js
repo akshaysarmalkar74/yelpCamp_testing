@@ -19,6 +19,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const mongoSanitize = require("express-mongo-sanitize");
 
 /*
 • LocalStrategy — We use passport-local to create a new LocalStrategy. 
@@ -49,6 +50,15 @@ app.set("views", path.join(__dirname, "views"));
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true })); //for parsing req.body which is by default undefined, it is populated when we use this line of code and req.body can be accessed, they are all in key-value pairs.
 app.use(express.static(path.join(__dirname, "public"))); //added for serving static assets-from public folder
+
+// app.use(mongoSanitize()); //to remove all unrequired queries from being entered...to remove mongo injection and as such
+//it does not allow special characters like $ sign to be used for querying
+app.use(
+  mongoSanitize({
+    replaceWith: "_",
+  })
+); //replaces the special character with '_'
+/*NOTE: any one of the above sanitization features can be used. */
 
 const sessionConfig = {
   secret: "thisshouldbeabettersecret!",
@@ -85,6 +95,7 @@ So, whatever is attached to the res.locals object in Express gets passed to the 
 In this, we use it to pass the flash message to any rendered EJS view, so we can show it on the 
 page when it's loaded in the browser (i.e. when a flash message happens). */
 app.use((req, res, next) => {
+  console.log(req.query);
   // console.log(req.session);
   res.locals.success = req.flash("success"); //we will have access to this in out templates (show route in campground.js) automatically
   //on every single request, we take whatever is under flash('success') and have access to it under locals under the key success (locals.success)
