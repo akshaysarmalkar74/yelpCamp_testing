@@ -33,7 +33,7 @@ const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/yelp-camp")
+  .connect(process.env.DB_URL || "mongodb://127.0.0.1:27017/yelp-camp")
   .then(() => {
     console.log("MONGO CONNECTED!");
   })
