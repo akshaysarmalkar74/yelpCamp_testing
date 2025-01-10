@@ -61,11 +61,14 @@ app.use(
 /*NOTE: any one of the above sanitization features can be used. */
 
 const sessionConfig = {
+  name: "new", //name for the session..just another step for security...now the name shown in the broswer is changed from connect.sid
   secret: "thisshouldbeabettersecret!",
   resave: false,
   saveUninitialized: true,
   cookie: {
     httpOnly: true, //for security
+    /*NOTE THAT THE BELOW MUST HAVE BEEN IMPLEMENTED BEFORE HAND, if it is now, it will break code. */
+    //secure: true,// for secure connections only...localhost isn't secure by default.
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //date.now is in milliseconds not in actual date, here it is set for a week
     //1000 ms in a day, 60s in min, 60 min in an hr, 24 hrs in a day, 7 days in a week
     maxAge: 1000 * 60 * 60 * 24 * 7,
